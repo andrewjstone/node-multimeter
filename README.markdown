@@ -44,7 +44,7 @@ Create a new progress bar at `(x,y)` with `params` which default to:
 
 * width : 10
 * before : '['
-* after : ']'
+* after : '] '
 * solid : { background : 'blue', foreground : 'white', text : '|' }
 * empty : { background : null, foreground : null, text : ' ' }
 
