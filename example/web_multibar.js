@@ -1,11 +1,8 @@
-var net = require('net');
 var http = require('http');
-var multimeter = require('./');
+var multimeter = require('../');
 
-//(function (stream) {
 http.createServer(function (req, res) {
     res.setHeader('content-type', 'application/octet-stream');
-    res.write('beep');
     
     var multi = multimeter(res);
     multi.charm.on('^C', process.exit);
@@ -16,13 +13,21 @@ http.createServer(function (req, res) {
     var deltas = [];
     
     for (var i = 0; i < 5; i++) {
-        var s = 'bar ' + i + ': \n';
+        var s = 'ABCDE'[i] + ': \n';
         multi.write(s);
         
-        var bar = multi(s.length, i + 1);
+        var bar = multi(s.length, i + 1, {
+            width : 20,
+            solid : {
+                text : '|',
+                foreground : 'white',
+                background : 'blue'
+            },
+            empty : { text : ' ' },
+        });
         bars.push(bar);
         
-        deltas[i] = 2 + Math.random() * 8;
+        deltas[i] = 1 + Math.random() * 9;
         progress.push(0);
     }
     
@@ -35,15 +40,16 @@ http.createServer(function (req, res) {
             bars[i].percent(progress[i]);
             if (p < 100 && progress[i] >= 100) pending --;
             if (pending === 0) {
-                res.write('\nAll done.\n');
+                multi.write('\nAll done.\n');
                 res.end();
             }
         });
-    }, 200);
+    }, 100);
     
     res.connection.on('end', function () {
         multi.destroy();
         clearInterval(iv);
     });
-//})(process);
 }).listen(8080);
+
+console.log('curl -N localhost:8080');
