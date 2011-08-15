@@ -1,6 +1,6 @@
-var multimeter = require('../');
-
+var multimeter = require('multimeter');
 var multi = multimeter(process);
+
 multi.on('^C', function () {
     multi.charm.cursor(true);
     multi.write('\n').destroy();
@@ -10,7 +10,6 @@ multi.on('^C', function () {
 multi.charm.cursor(false);
 
 multi.drop(function (bar) {
-    
     var iv = setInterval(function () {
         var p = bar.percent();
         bar.percent(p + 1);

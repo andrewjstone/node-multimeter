@@ -1,4 +1,4 @@
-var multimeter = require('../');
+var multimeter = require('multimeter');
 
 var multi = multimeter(process);
 var charm = multi.charm;
