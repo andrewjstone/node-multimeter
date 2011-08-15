@@ -3,6 +3,8 @@ multimeter
 
 Control multiple ANSI progress bars on the terminal.
 
+![multibar example output](http://substack.net/images/screenshots/multibar.png)
+
 ![multimeter](http://substack.net/images/multimeter.png)
 
 example

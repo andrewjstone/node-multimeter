@@ -41,6 +41,7 @@ var iv = setInterval(function () {
             multi.write('\nAll done.\n');
             multi.destroy();
             clearInterval(iv);
+            pending --;
         }
     });
 }, 100);
