@@ -39,5 +39,8 @@ var exports = module.exports = function (c) {
     multi.destroy = charm.destroy.bind(charm);
     multi.write = charm.write.bind(charm);
     
+    multi.on = charm.on.bind(charm);
+    multi.removeListener = charm.removeListener.bind(charm);
+    
     return multi;
 };
