@@ -1,60 +1,43 @@
 var charmer = require('charm');
+var Bar = require('./lib/bar');
 
-module.exports = function () {
-    var charm = charmer.apply(null, arguments);
-    charm.on('data', function (buf) {
-        if (buf[0] === 3) {
+var exports = module.exports = function (c) {
+    if (c instanceof charmer.Charm) {
+        var charm = c;
+    }
+    else {
+        var charm = charmer.apply(null, arguments);
+        charm.on('^C', function () {
             charm.destroy();
-            process.exit();
-        }
-    });
+        });
+    }
     
-    var multi = function () {
-        var queue = { percent : [], ratio : [] };
-        var self = {
-            percent : function (p) {
-                queue.percent.push(p);
-            },
-            ratio : function (x, y) {
-                queue.ratio.push([ x, y ]);
-            }
-        };
+    var multi = function (x, y, params) {
+        if (typeof x === 'object') {
+            params = x;
+            x = params.x;
+            y = params.y;
+        }
+        if (!params) params = {};
+        
+        if (x === undefined) throw new Error('x is undefined');
+        if (y === undefined) throw new Error('y is undefined');
+        
+        return new Bar(charm, x, y, params);
+    };
+    
+    multi.drop = function (params, cb) {
+        if (!cb) { cb = params; params = {} }
         
         charm.position(function (x, y) {
-            self.percent = function (p) {
-                charm.push(true);
-                if (p > 100) p = 100;
-                
-                var pf = Math.floor(p);
-                var bars = Math.floor(p / 10);
-                
-                charm
-                    .position(x, y)
-                    .write('[')
-                    .background('green')
-                    .write(Array(bars + 1).join(' '))
-                    .display('reset')
-                    .write(Array(10 - bars + 1).join(' '))
-                    .write('] ' + pf + ' %')
-                ;
-                
-                charm.pop(true);
-            };
-            
-            queue.percent.forEach(function (p) {
-                self.percent(p);
-            });
-            
-            queue.ratio.forEach(function (xy) {
-                self.ratio(xy[0], xy[1]);
-            });
-        }).write('\r\n');
-        
-        return self;
+            var bar = new Bar(charm, x, y, params);
+            cb(bar);
+        });
     };
     
     multi.charm = charm;
     multi.destroy = charm.destroy.bind(charm);
+    multi.write = charm.write.bind(charm);
     
     return multi;
 };
