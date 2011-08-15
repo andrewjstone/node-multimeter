@@ -12,7 +12,7 @@ http.createServer(function (req, res) {
         .write('Calculating the sum of [0..100]:\n\n')
     ;
     
-    var bar = multi(4, 3);
+    var bar = multi(4, 3, { width : 20 });
     bar.percent(0);
     
     var sum = 0;
@@ -41,3 +41,5 @@ http.createServer(function (req, res) {
         clearInterval(iv);
     });
 }).listen(8081);
+
+console.log('curl -N localhost:8081');
