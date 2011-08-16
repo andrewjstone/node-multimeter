@@ -37,8 +37,8 @@ will be passed directly to [charm](https://github.com/substack/node-charm).
 
 If you pass in a charm object that will be used instead of creating a new one.
 
-multi(x, y, params)
--------------------
+var bar = multi(x, y, params)
+-----------------------------
 
 Create a new progress bar at `(x,y)` with `params` which default to:
 
@@ -58,6 +58,20 @@ multi.on(...), multi.removeListener(...), multi.destroy(...), multi.write(...)
 ------------------------------------------------------------------------------
 
 Call event emitter functions on the underlying `charm` object.
+
+bar.percent(p, msg=p + ' %')
+----------------------------
+
+Update the progress bar to `p` percent, a value between 0 and 100, inclusive.
+
+The text to the right of the progress bar will be set to `msg`.
+
+bar.ratio(n, d, msg=n + ' / ' + d)
+----------------------------------
+
+Update the progress bar with a ratio, `n/d`.
+
+The text to the right of the progress bar will be set to `msg`.
 
 attributes
 ==========
